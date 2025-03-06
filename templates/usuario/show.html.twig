@@ -19,6 +19,14 @@
                 <th>Roles</th>
                 <td>{{ usuario.roles ? usuario.roles|json_encode : '' }}</td>
             </tr>
+            {% if usuario.foto %}
+                <tr>
+                    <th>Foto</th>
+                    <td>
+                        <img src="{{ usuario.foto.filePath }}"  alt="Photo" height="200"/>
+                    </td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 

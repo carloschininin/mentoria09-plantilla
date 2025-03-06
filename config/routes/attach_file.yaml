@@ -1,0 +1,2 @@
+_attach_file:
+  resource: '@AttachFileBundle/Resources/config/routing.yaml'

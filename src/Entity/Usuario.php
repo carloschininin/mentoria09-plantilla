@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UsuarioRepository;
+use CarlosChininin\AttachFile\Model\AttachFile;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -32,6 +33,9 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     private ?string $passwordActual = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?AttachFile $foto = null;
 
     public function getId(): ?int
     {
@@ -116,5 +120,27 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPasswordActual(?string $passwordActual): void
     {
         $this->passwordActual = $passwordActual;
+    }
+
+    public function getFoto(): ?AttachFile
+    {
+        return $this->foto;
+    }
+
+    public function setFoto(?AttachFile $foto): static
+    {
+        $this->foto = $foto;
+
+        return $this;
+    }
+
+    public function __serialize(): array
+    {
+        return [$this->id, $this->username, $this->password];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        [$this->id, $this->username, $this->password] = $data;
     }
 }

@@ -1,0 +1,44 @@
+{% use 'bootstrap_5_horizontal_layout.html.twig' %}
+
+{% block attach_file_widget %}
+    {% if value and render %}
+        {% if render.value == 'image' %}
+            <div class="row">
+                <div class="col-auto pe-0">
+                    <a class="d-flex align-items-center h-100" href="{{ path('attach_file_download_short', {secure: value.secure}) }}"
+                       target="_blank" title="{{ value.name }}">
+                        <img class="img-avatar img-avatar32" src="{{ asset(value.filePath) | imagine_filter('mini') }}" alt="Photo" />
+                    </a>
+                </div>
+                <div class="col">
+                    {{- form_widget(form.file) -}}
+                </div>
+            </div>
+        {% elseif render.value == 'link' %}
+            <div class="row">
+                <div class="col-auto pe-0">
+                    <a class="d-flex align-items-center h-100" href="{{ path('attach_file_download_short', {secure: value.secure}) }}"
+                       target="_blank" title="{{ value.name }}">
+                        <span class="">
+                            <i class="fs-4 fa fa-link"></i>
+                        </span>
+                    </a>
+                </div>
+                <div class="col">
+                    {{- form_widget(form.file) -}}
+                </div>
+            </div>
+        {% elseif render.value == 'name' %}
+            {{- form_widget(form.file) -}}
+            <div class="form-text">
+                <a class="small fw-medium" href="{{ path('attach_file_download_short', {secure: value.secure}) }}" target="_blank">
+                    <i class="fa fa-link"></i> {{ value.name }}
+                </a>
+            </div>
+        {% else %}
+            {{- form_widget(form.file) -}}
+        {% endif %}
+    {% else %}
+        {{- form_widget(form.file) -}}
+    {% endif %}
+{% endblock %}

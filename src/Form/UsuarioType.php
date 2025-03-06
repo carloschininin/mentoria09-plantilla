@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Usuario;
+use CarlosChininin\AttachFile\Form\AttachFileRender;
+use CarlosChininin\AttachFile\Form\AttachFileType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -23,6 +25,10 @@ class UsuarioType extends AbstractType
                 'required' => false,
                 'label' => 'Password Nuevo',
             ])
+            ->add('foto', AttachFileType::class, [
+                'required' => false,
+                'render' => AttachFileRender::IMAGE,
+            ]);
         ;
     }
 

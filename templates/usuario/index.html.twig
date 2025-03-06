@@ -9,6 +9,7 @@
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Foto</th>
                 <th>Username</th>
                 <th>Roles</th>
                 <th>actions</th>
@@ -18,6 +19,11 @@
         {% for usuario in usuarios %}
             <tr>
                 <td>{{ usuario.id }}</td>
+                <td>
+                    {% if usuario.foto %}
+                        <img class="h-25 w-25" src="{{ asset(usuario.foto.filePath) | imagine_filter('mini') }}" alt="Foto" />
+                    {% endif %}
+                </td>
                 <td>{{ usuario.username }}</td>
                 <td>{{ usuario.roles ? usuario.roles|json_encode : '' }}</td>
                 <td>
