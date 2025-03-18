@@ -67,7 +67,7 @@ final class UsuarioController extends AbstractController
 
         $usuarios = $usuarioRepository->findAll();
         $export = new SpreadsheetWriter();
-        $export->fromArray('A', 1, [$headers]);
+        $export->fromArray(1, 1, [$headers], $export->headerStyle());
 
         $row=2;
         foreach ($usuarios as $usuario) {
@@ -80,6 +80,7 @@ final class UsuarioController extends AbstractController
         }
 
         return $export
+            ->execute()
             ->columnAutoSize()
             ->download('usuarios_export');
     }
