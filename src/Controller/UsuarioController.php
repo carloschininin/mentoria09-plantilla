@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Entity\Usuario;
 use App\Form\UsuarioType;
 use App\Repository\UsuarioRepository;
+use CarlosChininin\Spreadsheet\Shared\DataFormat;
+use CarlosChininin\Spreadsheet\Shared\DataType;
+use CarlosChininin\Spreadsheet\Writer\PhpSpreadsheet\SpreadsheetWriter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +24,64 @@ final class UsuarioController extends AbstractController
         return $this->render('usuario/index.html.twig', [
             'usuarios' => $usuarioRepository->findAll(),
         ]);
+    }
+
+//    #[Route('/export', name: 'app_usuario_export', methods: ['GET'])]
+//    public function export(UsuarioRepository $usuarioRepository): Response
+//    {
+//        $headers = [
+//            'ID',
+//            'NOMBRE DE USUARIO',
+//            'FECHA',
+//            'ESTADO',
+//        ];
+//
+//        $usuarios = $usuarioRepository->findAll();
+//        $items = [];
+//        foreach ($usuarios as $usuario) {
+//            $item = [];
+//            $item[] = $usuario->getId();
+//            $item[] = $usuario->getUsername();
+//            $item[] = new \DateTime();
+//            $item[] = 'Aceptado';
+//
+//            $items[] = $item;
+//            unset($item);
+//        }
+//
+//        $export = new SpreadsheetWriter($items, $headers);
+//        $export->execute()->columnAutoSize();
+//
+//        return $export->download('usuarios_export');
+//    }
+
+    #[Route('/export', name: 'app_usuario_export', methods: ['GET'])]
+    public function export(UsuarioRepository $usuarioRepository): Response
+    {
+        $headers = [
+            'ID',
+            'NOMBRE DE USUARIO',
+            'FECHA',
+            'ESTADO',
+        ];
+
+        $usuarios = $usuarioRepository->findAll();
+        $export = new SpreadsheetWriter();
+        $export->fromArray('A', 1, [$headers]);
+
+        $row=2;
+        foreach ($usuarios as $usuario) {
+            $col = 1;
+            $export->setCellValue($col++, $row, $usuario->getId());
+            $export->setCellValue($col++, $row, $usuario->getUsername());
+            $export->setCellValue($col++, $row, new \DateTime(), DataFormat::DATE_DMMINUS, DataType::DATE);
+            $export->setCellValue($col++, $row, 'Aceptado');
+            $row++;
+        }
+
+        return $export
+            ->columnAutoSize()
+            ->download('usuarios_export');
     }
 
     #[Route('/new', name: 'app_usuario_new', methods: ['GET', 'POST'])]
